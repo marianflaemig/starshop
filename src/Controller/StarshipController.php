@@ -14,7 +14,7 @@ class StarshipController extends AbstractController
     {
         $ship = $repository->find($id);
         if (!$ship) {
-            throw $this->createNotFoundException('Starship not found');
+            throw $this->createNotFoundException('StarshipModel not found');
         }
 
         return $this->render('starship/show.html.twig', [
