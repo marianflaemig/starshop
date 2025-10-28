@@ -24,7 +24,7 @@ class Starship
     private ?string $captain = null;
 
     #[ORM\Column]
-    private ?StarshipStatusEnum $status = null;
+    private ?string $status = null;
 
     public function getId(): ?int
     {
@@ -74,17 +74,12 @@ class Starship
         return $this;
     }
 
-    public function getStatus(): ?StarshipStatusEnum
+    public function getStatus(): ?string
     {
         return $this->status;
     }
 
-    public function getStatusString(): ?string
-    {
-        return $this->status->value;
-    }
-
-    public function setStatus(?StarshipStatusEnum $status): void
+    public function setStatus(?string $status): void
     {
         $this->status = $status;
     }
@@ -92,9 +87,9 @@ class Starship
     public function getStatusImageFilename(): string
     {
         return match ($this->status) {
-            StarshipStatusEnum::WAITING => 'images/status-waiting.png',
-            StarshipStatusEnum::IN_PROGRESS => 'images/status-in-progress.png',
-            StarshipStatusEnum::COMPLETED => 'images/status-complete.png',
+            'WAITING' => 'images/status-waiting.png',
+            'IN_PROGRESS' => 'images/status-in-progress.png',
+            'COMPLETED' => 'images/status-complete.png',
         };
     }
 }
