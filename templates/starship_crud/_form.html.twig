@@ -1,4 +1,108 @@
 {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+<table>
+    <tr>
+        <td class="p-3">
+            <label for="{{ field_name(form.name) }}">Name</label>
+        </td>
+        <td>
+            <input class="w-[350px] rounded-[60px] py-2 px-5 bg-white/10 hover:bg-white/20"
+                   type="text" id="{{ field_name(form.name) }}" name="{{ field_name(form.name) }}" required="required"
+                   value="{{ starship.name }}">
+        </td>
+    </tr>
+    <tr>
+        <td class="p-3">
+            <label for="{{ field_name(form.class) }}" class="required">Class</label>
+        </td>
+        <td>
+            <input class="w-[350px] rounded-[60px] py-2 px-5 bg-white/10 hover:bg-white/20"
+                   type="text" id="{{ field_name(form.class) }}" name="{{ field_name(form.class) }}" required="required"
+                   value="{{ starship.class }}">
+
+        </td>
+    </tr>
+    <tr>
+        <td class="p-3">
+            <label for="{{ field_name(form.captain) }}" class="required">Captain</label>
+        </td>
+        <td>
+            <input class="w-[350px] rounded-[60px] py-2 px-5 bg-white/10 hover:bg-white/20"
+                   type="text" id="{{ field_name(form.captain) }}" name="{{ field_name(form.captain) }}"
+                   required="required"
+                   value="{{ starship.captain }}">
+        </td>
+    </tr>
+{#    <tr>
+{#        <td class="p-3">#}
+{#            <label for="{{ field_name(form.status) }}" class="required">Status</label>#}
+{#        </td>#}
+{#        <td>#}
+{#            <select class="w-[350px] rounded-[60px] py-2 px-5 bg-white/10 hover:bg-white/20"#}
+{#                    id="{{ field_name(form.status) }}" name="{{ field_name(form.status) }}"#}
+{#                    required="required">#}
+{#                {% for option in ['WAITING', 'IN_PROGRESS', 'COMPLETED'] %}#}
+{#                    {% set selected = '' %}#}
+{#                    {% if option == starship.status %}#}
+{#                        {% set selected = 'selected' %}#}
+{#                    {% endif %}#}
+{#                    <option value="{{ option }}" {{ selected }}>{{ option }}</option>#}
+{#                {% endfor %}#}
+{#            </select>#}
+{#        </td>#}
+{#    </tr>#}
+    <tr>
+        <td class="p-3">
+            <label for="" class="required">Status</label>
+        </td>
+        <td>
+            {# Define current status using the form object's value #}
+            {% set currentStatus = form.status.vars.value ?? 'WAITING' %}
+
+            {# 1. The MAIN DIV container for the whole component #}
+            <div data-controller="dropdown" class="relative">
+
+                {# 2. The HIDDEN NATIVE SELECT (REQUIRED for form submission) #}
+                {# We render the form widget just to get the correct name/id, then hide it #}
+                {{ form_widget(form.status, {
+                    'attr': {
+                        'class': 'sr-only',
+                        'data-dropdown-target': 'nativeSelect'
+                    }
+                }) }}
+
+                {# 3. The CUSTOM SELECT BUTTON (Visible Display) #}
+                <div data-dropdown-target="button"
+                     data-action="click->dropdown#toggle"
+                     class="w-[350px] rounded-[60px] py-2 px-5 bg-white/10 hover:bg-white/20 cursor-pointer flex justify-between items-center">
+
+                    {# Display the currently selected value #}
+                    <span data-dropdown-target="display">
+                        {{ currentStatus }}
+                    </span>
+
+                    {# A simple down arrow icon #}
+                    <span>&#9660;</span>
+                </div>
+
+                {# 4. The CUSTOM DROPDOWN LIST (Initially Hidden) #}
+                <ul data-dropdown-target="list"
+                    class="hidden absolute z-10 w-[350px] mt-1 bg-gray-700 rounded-lg shadow-xl overflow-hidden text-white/90">
+
+                    {% for option in ['WAITING', 'IN_PROGRESS', 'COMPLETED'] %}
+                        {% set isSelected = (option == currentStatus) %}
+                        <li data-dropdown-target="option"
+                            data-value="{{ option }}"
+                            data-action="click->dropdown#select"
+                            class="py-2 px-5 hover:bg-white/20 cursor-pointer {{ isSelected ? 'bg-white/30 font-bold' : '' }}">
+                            {{ option }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </td>
+    </tr>
+
+</table>
+{{ form_rest(form) }}
+    <button class="block mt-2 mx-auto rounded-[60px] py-2 px-5 bg-white/10 hover:bg-white/20">{{ button_label|default('Save') }}</button>
 {{ form_end(form) }}
