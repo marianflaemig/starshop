@@ -6,19 +6,32 @@ use App\Entity\Starship;
 use App\Form\StarshipType;
 use App\Repository\StarshipRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/starship/crud')]
 final class StarshipCrudController extends AbstractController
 {
     #[Route(name: 'app_starship_crud_index', methods: ['GET'])]
-    public function index(StarshipRepository $starshipRepository): Response
+    public function index(StarshipRepository                              $starshipRepository,
+                          PaginatorInterface                              $paginator,
+                          Request                                         $request
+    ): Response
     {
+        $queryBuilder = $starshipRepository->getBaseQueryBuilder();
+
+        $paginator = $paginator->paginate(
+            $queryBuilder,
+            $request->query->getInt('page', 1),
+            15
+        );
+
         return $this->render('starship_crud/index.html.twig', [
-            'starships' => $starshipRepository->findAll(),
+            'pagination' => $paginator
         ]);
     }
 
@@ -71,7 +84,7 @@ final class StarshipCrudController extends AbstractController
     #[Route('/{id}', name: 'app_starship_crud_delete', methods: ['POST'])]
     public function delete(Request $request, Starship $starship, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$starship->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $starship->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($starship);
             $entityManager->flush();
         }
