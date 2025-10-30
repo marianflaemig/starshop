@@ -1,0 +1,18 @@
+doctrine_migrations:
+  # This configuration tells the Migrations Bundle where to find
+  # and look for your migration files.
+
+  # 1. Define the namespace/directory mapping.
+  # We are using the standard 'DoctrineMigrations' namespace pointing to the 'migrations' directory.
+  migrations_paths:
+    'DoctrineMigrations': '%kernel.project_dir%/migrations'
+
+  # 2. Set the table where executed versions are tracked. (Retaining the default)
+#  table_storage:
+#    table_name: 'doctrine_migration_versions'
+
+  # 3. Explicitly set the profiler option as requested.
+  enable_profiler: false
+
+  # 4. Ensure the correct entity manager is used (retaining the explicit setting)
+  em: default
